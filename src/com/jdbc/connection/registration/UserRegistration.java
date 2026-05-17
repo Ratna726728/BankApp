@@ -1,4 +1,4 @@
-package com.jdbc.connection.datainsertion;
+package com.jdbc.connection.registration;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,13 +11,13 @@ public class UserRegistration {
 	PreparedStatement preparedStatement = null;
 
 	public void registrationUserInsert(String firstName, String surname, int age, String email, String contactNumber,
-			String accountNumber, String address, String userId, String branchName) throws SQLException {
+			String accountNumber, String address, String userId, String branchName, double balance) throws SQLException {
 
 		try {
 			DatabaseConnection databaseConnection = new DatabaseConnection();
 			connection = databaseConnection.getConnection();
 			preparedStatement = connection.prepareStatement(
-					"insert into user_registation(firstName, surname, age, email, contactNumber, accountNumber, address, userId, branchName)values(?,?,?,?,?,?,?,?,?)");
+					"insert into user_registation(firstName, surname, age, email, contactNumber, accountNumber, address, userId, branchName, balance)values(?,?,?,?,?,?,?,?,?,?)");
 			preparedStatement.setString(1, firstName);
 			preparedStatement.setString(2, surname);
 			preparedStatement.setInt(3, age);
@@ -27,6 +27,7 @@ public class UserRegistration {
 			preparedStatement.setString(7, address);
 			preparedStatement.setString(8, userId);
 			preparedStatement.setString(9, branchName);
+			preparedStatement.setDouble(10, balance);
 			
 			int a = preparedStatement.executeUpdate();
 			System.out.println("Record is updated");

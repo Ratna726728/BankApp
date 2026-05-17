@@ -3,7 +3,11 @@ package com.jdbc.services;
 import java.sql.SQLException;
 import java.util.Scanner;
 
-import com.jdbc.connection.datainsertion.UserRegistration;
+import com.jdbc.connection.balacechecker.CheckBalance;
+import com.jdbc.connection.registration.UserRegistration;
+import com.jdbc.connection.transactions.deposit.TransactionDeposit;
+import com.jdbc.connection.transactions.withdraw.TransactionWithdraw;
+import com.jdbc.connection.verification.LoginVerification;
 import com.jdbc.model.Account;
 
 public class AccountServices extends Account {
@@ -50,24 +54,71 @@ public class AccountServices extends Account {
 		String accountNumber = scanner.next();
 		super.setAccountNumber(accountNumber);
 
+		System.out.println("Enter the amount you want to deposit at the time of account cration: ");
+		double amount = scanner.nextDouble();
+
 		userRegistration.registrationUserInsert(firstName, surname, age, email, contactNumber, accountNumber, address,
-				userId, branchName);
+				userId, branchName, amount);
 		// save the data to the db
 		System.out.println("User registration completed!!!");
 	}
 
-	public void deposit() {
-		// TODO Auto-generated method stub
+	public void deposit() throws SQLException {
+		// objects used in deposit method
+		Scanner scanner = new Scanner(System.in);
+		LoginVerification loginVerification = new LoginVerification();
+		CheckBalance checkBalance = new CheckBalance();
+		TransactionDeposit transactionDeposit = new TransactionDeposit();
+
+		// ask user details
+		System.out.print("Enter the account Number: ");
+		String accountNumber = scanner.next();
+		System.out.print("Enter the user ID: ");
+		String userId = scanner.next();
+		System.out.print("Enter the amount you want to deposit: ");
+		double amount = scanner.nextDouble();
+		// check the details if it is register in database
+		loginVerification.userDatabaseAvailabilityChecker(accountNumber, userId);
+		// to deposit new amount into the balance
+		transactionDeposit.amountDeposit(accountNumber, amount);
+		// check user balance
+		checkBalance.userBalance(accountNumber, userId);
+	}
+
+	public void withdraw() throws SQLException {
+		// objects used in deposit method
+		Scanner scanner = new Scanner(System.in);
+		LoginVerification loginVerification = new LoginVerification();
+		CheckBalance checkBalance = new CheckBalance();
+		TransactionWithdraw transactionWithdraw = new TransactionWithdraw();
+
+		// ask user details
+		System.out.print("Enter the account Number: ");
+		String accountNumber = scanner.next();
+		System.out.print("Enter the user ID: ");
+		String userId = scanner.next();
+		System.out.print("Enter the amount you want to deposit: ");
+		double amount = scanner.nextDouble();
+		// check the details if it is register in database
+		loginVerification.userDatabaseAvailabilityChecker(accountNumber, userId);
+		// to deposit new amount into the balance
+		transactionWithdraw.amountWithdraw(accountNumber, amount);
+		// check user balance
+		checkBalance.userBalance(accountNumber, userId);
 
 	}
 
-	public void withdraw() {
-		// TODO Auto-generated method stub
+	public void checkBalance() throws SQLException {
+		Scanner scanner = new Scanner(System.in);
+		CheckBalance checkBalance = new CheckBalance();
+		// ask user details
+		System.out.print("Enter the account Number: ");
+		String accountNumber = scanner.next();
+		System.out.print("Enter the user ID: ");
+		String userId = scanner.next();
 
-	}
-
-	public void checkBalance() {
-		// TODO Auto-generated method stub
+		// connect to db and check the
+		checkBalance.userBalance(accountNumber, userId);
 
 	}
 
